@@ -1,11 +1,13 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 const inputPickerEl = document.querySelector('#datetime-picker');
 const startBtnEl = document.querySelector('[data-start]');
-const timerDaysEl = document.queryCommandValue(['[data-days]']);
-const timerHoursEl = document.queryCommandValue(['[data-hours]']);
-const timerMinutesEl = document.queryCommandValue(['[data-minutes]']);
-const timerSecoundsEl = document.queryCommandValue(['[data-secounds]']);
+const timerDaysEl = document.querySelector('[data-days]');
+const timerHoursEl = document.querySelector('[data-hours]');
+const timerMinutesEl = document.querySelector('[data-minutes]');
+const timerSecondsEl = document.querySelector('[data-seconds]');
+
 startBtnEl.disabled = true;
 
 const addLeadingZero = value => {
@@ -32,23 +34,37 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] < Date.now()) {
-      window.alert('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
       startBtnEl.disabled = true;
     } else {
       startBtnEl.disabled = false;
+      Notiflix.Notify.success('OK');
     }
-    startBtnEl.addEventListener('click', event => {
-      const startTime = selectedDates[0];
+  },
+};
+  
+startBtnEl.addEventListener('click', event => {
       setInterval(() => {
+         const startTime = new Date(inputPickerEl.value);
         const currentTime = Date.now();
         const deltaTime = startTime - currentTime;
-        const timeComponents = convertMs(deltaTime);
-        console.log(timeComponents);
+        if (deltaTime >= 0) {
+          const { days, hours, minutes, seconds } = convertMs(deltaTime);
+          timerDaysEl.textContent = days;
+          timerHoursEl.textContent = hours;
+          timerMinutesEl.textContent = minutes;
+          timerSecondsEl.textContent = seconds;
+          if (seconds <= 9) {
+            timerSecondsEl.style.color = "red";
+          }
+          else {
+            timerSecondsEl.style.color = 'inherit';
+          }
+        }
       }, 1000);
+
       startBtnEl.disabled = true;
-    })     
-  },
-  };
+    });     
 
 flatpickr(inputPickerEl, options);
 
