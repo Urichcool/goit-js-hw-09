@@ -3,7 +3,7 @@ const formEl = document.querySelector('.form');
 const firstDelay = document.querySelector('[name = delay]');
 const delayStep = document.querySelector('[name = step]');
 const amount = document.querySelector('[name = amount]');
-timerId = null;
+let timerId = null;
 
 formEl.addEventListener('submit', event => {
   let positionCount = 0;
