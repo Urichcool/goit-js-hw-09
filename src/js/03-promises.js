@@ -22,7 +22,7 @@ formEl.addEventListener('submit', event => {
         .catch(({ position, delay }) => {
           Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
         });
-      if (positionCount >= amount.value) {
+      if (positionCount === Number(amount.value)) {
         clearInterval(timerId);
         positionCount = 0;
         delayCount = 0;
